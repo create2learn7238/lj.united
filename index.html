@@ -49,63 +49,15 @@
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
+      /* remove custom cursor - standard cursor */
+      cursor: auto;
     }
 
-    /* Custom cursor only on real pointer (mouse) devices */
-    @media (pointer: fine) {
-      body {
-        cursor: none;
-      }
-    }
-
-    /* ── SMOOTH CUSTOM CURSOR (hidden on touch devices) ── */
-    @media (pointer: fine) {
-      #cursor-dot {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        background: var(--cyan);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        box-shadow: 0 0 18px var(--cyan), 0 0 32px rgba(0, 212, 255, .5);
-        transition: background 0.15s ease, width 0.2s, height 0.2s;
-        mix-blend-mode: screen;
-        display: block;
-      }
-
-      #cursor-ring {
-        position: fixed;
-        width: 44px;
-        height: 44px;
-        border: 1.8px solid rgba(0, 212, 255, .5);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-        transform: translate(-50%, -50%);
-        transition: width 0.2s cubic-bezier(0.2, 0.9, 0.4, 1), height 0.2s cubic-bezier(0.2, 0.9, 0.4, 1), border-color 0.2s, opacity 0.2s;
-        will-change: left, top;
-        display: block;
-      }
-    }
-
-    @media (pointer: coarse) {
-
-      #cursor-dot,
-      #cursor-ring {
-        display: none !important;
-      }
-
-      body {
-        cursor: auto !important;
-      }
-
-      .card,
-      .soc-btn,
-      .nav-pill {
-        cursor: pointer !important;
-      }
+    /* remove all custom cursor related elements */
+    #cursor-dot,
+    #cursor-ring,
+    #mouse-glow {
+      display: none !important;
     }
 
     /* ── BACKGROUND LAYERS (deep black, intense vignette) ── */
@@ -114,18 +66,6 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-    }
-
-    #mouse-glow {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124, 58, 237, 0.03) 0%, transparent 75%);
-      pointer-events: none;
-      z-index: 0;
-      transform: translate(-50%, -50%);
-      opacity: 0.8;
     }
 
     #scanlines {
@@ -369,6 +309,7 @@
       border-radius: 100px;
       transition: border-color .3s, color .3s, box-shadow .3s;
       white-space: nowrap;
+      cursor: pointer;
     }
 
     .nav-pill:hover {
@@ -607,7 +548,7 @@
       border-radius: 12px;
       transition: transform .4s cubic-bezier(.16, 1, .3, 1), box-shadow .4s;
       animation: fadeUp .7s ease both;
-      cursor: none;
+      cursor: pointer;
     }
 
     /* per-card neon borders */
@@ -952,6 +893,7 @@
       gap: 7px;
     }
 
+    /* ========== SOCIAL BUTTONS - ENHANCED GLOW WITH BRAND COLORS ========== */
     .soc-btn {
       position: relative;
       width: 34px;
@@ -965,8 +907,15 @@
       font-size: 13px;
       text-decoration: none;
       overflow: hidden;
-      transition: color .3s, border-color .3s, transform .25s, box-shadow .3s;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       cursor: pointer;
+      background: transparent;
+    }
+
+    .soc-btn i {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.2s ease;
     }
 
     .soc-btn::before {
@@ -975,57 +924,60 @@
       inset: 0;
       border-radius: 5px;
       opacity: 0;
-      transition: opacity .3s;
+      transition: opacity 0.3s ease;
+      z-index: 1;
     }
 
-    .soc-btn.ig::before {
-      background: radial-gradient(circle, rgba(228, 64, 95, 0.3), transparent 70%);
-    }
-
-    .soc-btn.gh::before {
-      background: radial-gradient(circle, rgba(130, 80, 255, 0.3), transparent 70%);
-    }
-
-    .soc-btn.li::before {
-      background: radial-gradient(circle, rgba(0, 119, 181, 0.4), transparent 70%);
-    }
-
-    .soc-btn.wa::before {
-      background: radial-gradient(circle, rgba(37, 211, 102, 0.3), transparent 70%);
-    }
-
-    .soc-btn:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .soc-btn:hover::before {
-      opacity: 1;
-    }
-
+    /* Instagram - neon pink/purple glow */
     .soc-btn.ig:hover {
       color: #e4405f;
-      box-shadow: 0 0 22px rgba(228, 64, 95, 0.5);
+      border-color: #e4405f;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 20px #e4405f, 0 0 35px rgba(228, 64, 95, 0.6), inset 0 0 8px rgba(228, 64, 95, 0.3);
     }
 
+    .soc-btn.ig:hover i {
+      transform: scale(1.1);
+      text-shadow: 0 0 8px #e4405f;
+    }
+
+    /* GitHub - purple/blue glow */
     .soc-btn.gh:hover {
       color: #c084fc;
-      box-shadow: 0 0 22px rgba(130, 80, 255, 0.5);
+      border-color: #c084fc;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 20px #a855f7, 0 0 35px rgba(168, 85, 247, 0.6), inset 0 0 8px rgba(168, 85, 247, 0.3);
     }
 
+    .soc-btn.gh:hover i {
+      transform: scale(1.1);
+      text-shadow: 0 0 8px #a855f7;
+    }
+
+    /* LinkedIn - electric blue glow */
     .soc-btn.li:hover {
       color: #38bdf8;
-      box-shadow: 0 0 22px rgba(0, 119, 181, 0.5);
+      border-color: #0a66c2;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 20px #0a66c2, 0 0 35px rgba(10, 102, 194, 0.6), inset 0 0 8px rgba(10, 102, 194, 0.3);
     }
 
+    .soc-btn.li:hover i {
+      transform: scale(1.1);
+      text-shadow: 0 0 8px #0a66c2;
+    }
+
+    /* WhatsApp - vibrant green glow */
     .soc-btn.wa:hover {
       color: #25d366;
-      box-shadow: 0 0 22px rgba(37, 211, 102, 0.5);
+      border-color: #25d366;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 20px #25d366, 0 0 35px rgba(37, 211, 102, 0.6), inset 0 0 8px rgba(37, 211, 102, 0.3);
     }
 
-    .soc-btn i {
-      position: relative;
-      z-index: 1;
+    .soc-btn.wa:hover i {
+      transform: scale(1.1);
+      text-shadow: 0 0 8px #25d366;
     }
 
     /* ANIMATIONS */
@@ -1159,9 +1111,7 @@
 
 <body>
 
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
-  <div id="mouse-glow"></div>
+  <!-- custom cursor elements removed -->
   <div id="scanlines"></div>
   <div id="vignette"></div>
 
@@ -1267,10 +1217,13 @@
         <div class="footer-right">
           <span class="footer-follow">follow_me →</span>
           <div class="footer-socials">
-            <a href="#" class="soc-btn ig"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="soc-btn gh"><i class="fab fa-github"></i></a>
-            <a href="#" class="soc-btn li"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="soc-btn wa"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/dixit.patel_since_2005/?hl=en" target="_blank" class="soc-btn ig"><i
+                class="fab fa-instagram"></i></a>
+            <a href="https://github.com/create2learn7238" target="_blank" class="soc-btn gh"><i
+                class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/dixit-patel-7718993a1/" target="_blank" class="soc-btn li"><i
+                class="fab fa-linkedin-in"></i></a>
+            <a href="https://wa.me/919316227238" target="_blank" class="soc-btn wa"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
       </div>
@@ -1281,67 +1234,7 @@
     (function () {
       "use strict";
 
-      // ── CURSOR: only activate on real pointer (mouse) devices, skip on touch ──
-      const isTouchOnly = !window.matchMedia('(pointer: fine)').matches;
-      const dot = document.getElementById('cursor-dot');
-      const ring = document.getElementById('cursor-ring');
-      const glow = document.getElementById('mouse-glow');
-
-      if (!isTouchOnly) {
-        let mouseX = -100, mouseY = -100;
-        let ringX = -100, ringY = -100;
-        let dotX = -100, dotY = -100;
-        const SPEED = 0.08;
-
-        document.addEventListener('mousemove', (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          glow.style.left = mouseX + 'px';
-          glow.style.top = mouseY + 'px';
-        });
-
-        function animateCursor() {
-          dotX += (mouseX - dotX) * 0.2;
-          dotY += (mouseY - dotY) * 0.2;
-          dot.style.left = dotX + 'px';
-          dot.style.top = dotY + 'px';
-
-          ringX += (mouseX - ringX) * SPEED;
-          ringY += (mouseY - ringY) * SPEED;
-          ring.style.left = ringX + 'px';
-          ring.style.top = ringY + 'px';
-
-          requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        // Interactive hover effects
-        const interactiveEls = document.querySelectorAll('a, .card, .soc-btn, .nav-pill');
-        interactiveEls.forEach(el => {
-          el.addEventListener('mouseenter', () => {
-            ring.style.width = '60px';
-            ring.style.height = '60px';
-            ring.style.borderColor = 'rgba(124,58,237,0.8)';
-            dot.style.background = '#7c3aed';
-            dot.style.width = '12px';
-            dot.style.height = '12px';
-          });
-          el.addEventListener('mouseleave', () => {
-            ring.style.width = '44px';
-            ring.style.height = '44px';
-            ring.style.borderColor = 'rgba(0,212,255,0.5)';
-            dot.style.background = 'var(--cyan)';
-            dot.style.width = '10px';
-            dot.style.height = '10px';
-          });
-        });
-      } else {
-        // Touch device: hide cursor elements entirely
-        if (dot) dot.style.display = 'none';
-        if (ring) ring.style.display = 'none';
-      }
-
-      // canvas background: extra animation + very dark base
+      // Canvas background animation (stars, particles, grid)
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
       let W, H;
@@ -1374,13 +1267,6 @@
           this.x += this.vx;
           this.y += this.vy;
           this.life++;
-          const dx = mouseX - this.x, dy = mouseY - this.y, d = Math.hypot(dx, dy);
-          if (d < 200) {
-            this.vx += (dx / d) * 0.016;
-            this.vy += (dy / d) * 0.016;
-          }
-          this.vx *= 0.992;
-          this.vy *= 0.992;
           if (this.life > this.maxLife || this.y < -20) this.reset(false);
         }
         draw() {
@@ -1433,16 +1319,6 @@
         }
       }
 
-      let pulses = [];
-      setInterval(() => {
-        if (mouseX > 0 && mouseY > 0) {
-          pulses.push({
-            x: mouseX, y: mouseY, r: 4, maxR: 140,
-            a: 0.22, color: PALETTE[Math.floor(Math.random() * PALETTE.length)]
-          });
-        }
-      }, 2400);
-
       function initParticles() {
         particles = [];
         hexagons = [];
@@ -1476,26 +1352,12 @@
         }
       }
 
-      function drawPulses() {
-        pulses = pulses.filter(p => p.r < p.maxR);
-        pulses.forEach(p => {
-          p.r += 1.8;
-          p.a *= 0.96;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.strokeStyle = p.color + p.a + ')';
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        });
-      }
-
       function drawBackgroundLoop() {
         ctx.clearRect(0, 0, W, H);
         drawGrid();
         hexagons.forEach(h => { h.update(); h.draw(); });
         drawConnections();
         particles.forEach(p => { p.update(); p.draw(); });
-        drawPulses();
         requestAnimationFrame(drawBackgroundLoop);
       }
       drawBackgroundLoop();
